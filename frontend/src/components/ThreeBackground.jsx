@@ -82,9 +82,111 @@ const ThreeBackground = () => {
 
     // Load GLTF Model
     const loader = new GLTFLoader();
+    
+    // Create fallback first to ensure something always appears
+    const createFallbackSword = () => {
+      const group = new THREE.Group();
+      
+      // Main blade - tall vertical blade
+      const bladeGeometry = new THREE.BoxGeometry(0.4, 8, 0.15);
+      const bladeMaterial = new THREE.MeshStandardMaterial({
+        color: 0xc8c8c8,
+        metalness: 0.7,
+        roughness: 0.15,
+        envMapIntensity: 3,
+      });
+      const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
+      blade.position.y = 2;
+      blade.castShadow = true;
+      group.add(blade);
+      
+      // Top ornament - diamond shape
+      const topGeometry = new THREE.ConeGeometry(0.8, 2, 4);
+      const top = new THREE.Mesh(topGeometry, bladeMaterial);
+      top.position.y = 7;
+      top.castShadow = true;
+      group.add(top);
+      
+      // Upper cross guard - horizontal
+      const upperGuardGeometry = new THREE.BoxGeometry(3, 0.25, 0.25);
+      const upperGuard = new THREE.Mesh(upperGuardGeometry, bladeMaterial);
+      upperGuard.position.y = 5.5;
+      upperGuard.castShadow = true;
+      group.add(upperGuard);
+      
+      // Upper guard ornaments
+      const ornamentGeometry = new THREE.ConeGeometry(0.4, 1, 3);
+      const leftOrnament1 = new THREE.Mesh(ornamentGeometry, bladeMaterial);
+      leftOrnament1.position.set(-1.5, 5.5, 0);
+      leftOrnament1.rotation.z = Math.PI / 2;
+      group.add(leftOrnament1);
+      
+      const rightOrnament1 = new THREE.Mesh(ornamentGeometry, bladeMaterial);
+      rightOrnament1.position.set(1.5, 5.5, 0);
+      rightOrnament1.rotation.z = -Math.PI / 2;
+      group.add(rightOrnament1);
+      
+      // Main cross guard
+      const guardGeometry = new THREE.BoxGeometry(4, 0.3, 0.3);
+      const guard = new THREE.Mesh(guardGeometry, bladeMaterial);
+      guard.position.y = -2;
+      guard.castShadow = true;
+      group.add(guard);
+      
+      // Guard ornaments
+      const leftOrnament2 = new THREE.Mesh(ornamentGeometry, bladeMaterial);
+      leftOrnament2.position.set(-2, -2, 0);
+      leftOrnament2.rotation.z = Math.PI / 2;
+      group.add(leftOrnament2);
+      
+      const rightOrnament2 = new THREE.Mesh(ornamentGeometry, bladeMaterial);
+      rightOrnament2.position.set(2, -2, 0);
+      rightOrnament2.rotation.z = -Math.PI / 2;
+      group.add(rightOrnament2);
+      
+      // Handle
+      const handleGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2.5, 8);
+      const handle = new THREE.Mesh(handleGeometry, bladeMaterial);
+      handle.position.y = -3.5;
+      handle.castShadow = true;
+      group.add(handle);
+      
+      // Bottom ornament - inverted diamond
+      const bottomGeometry = new THREE.ConeGeometry(1, 2.5, 4);
+      const bottom = new THREE.Mesh(bottomGeometry, bladeMaterial);
+      bottom.position.y = -6;
+      bottom.rotation.z = Math.PI;
+      bottom.castShadow = true;
+      group.add(bottom);
+      
+      // Lower decorative wings
+      const wingGeometry = new THREE.ConeGeometry(0.6, 1.5, 3);
+      const leftWing = new THREE.Mesh(wingGeometry, bladeMaterial);
+      leftWing.position.set(-2.5, -6, 0);
+      leftWing.rotation.z = Math.PI / 2 + Math.PI / 4;
+      group.add(leftWing);
+      
+      const rightWing = new THREE.Mesh(wingGeometry, bladeMaterial);
+      rightWing.position.set(2.5, -6, 0);
+      rightWing.rotation.z = -Math.PI / 2 - Math.PI / 4;
+      group.add(rightWing);
+      
+      return group;
+    };
+    
+    // Always create and show fallback sword
+    const fallbackSword = createFallbackSword();
+    scene.add(fallbackSword);
+    modelRef.current = fallbackSword;
+    console.log('Fallback decorative sword created and displayed');
+    
+    // Try to load GLTF but don't wait for it
     loader.load(
       '/scene.gltf',
       (gltf) => {
+        // Remove fallback
+        scene.remove(fallbackSword);
+        
         const model = gltf.scene;
         modelRef.current = model;
         
@@ -93,8 +195,8 @@ const ThreeBackground = () => {
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
         
-        console.log('Model loaded - Size:', size.x.toFixed(2), size.y.toFixed(2), size.z.toFixed(2));
-        console.log('Model center:', center.x.toFixed(2), center.y.toFixed(2), center.z.toFixed(2));
+        console.log('GLTF Model loaded - Size:', size.x.toFixed(2), size.y.toFixed(2), size.z.toFixed(2));
+        console.log('GLTF Model center:', center.x.toFixed(2), center.y.toFixed(2), center.z.toFixed(2));
         
         // Center the model
         model.position.x = -center.x;
@@ -103,11 +205,10 @@ const ThreeBackground = () => {
         
         // Scale to occupy 40-50% of viewport height
         const maxDim = Math.max(size.x, size.y, size.z);
-        const targetSize = 6; // Adjust this for size (bigger = larger model)
+        const targetSize = 6;
         const scale = targetSize / maxDim;
         model.scale.setScalar(scale);
         
-        // Position vertically centered
         model.position.y = 0;
         
         // Set initial rotation to 0
@@ -117,13 +218,12 @@ const ThreeBackground = () => {
         let materialCount = 0;
         model.traverse((child) => {
           if (child.isMesh) {
-            // Force visible white glossy material
             child.material = new THREE.MeshStandardMaterial({
-              color: 0xdddddd, // Light gray
-              metalness: 0.6,
-              roughness: 0.2,
+              color: 0xc8c8c8,
+              metalness: 0.7,
+              roughness: 0.15,
               envMapIntensity: 3,
-              side: THREE.DoubleSide, // Render both sides
+              side: THREE.DoubleSide,
             });
             child.castShadow = true;
             child.receiveShadow = true;
@@ -134,51 +234,17 @@ const ThreeBackground = () => {
         console.log(`Applied material to ${materialCount} meshes`);
         
         scene.add(model);
-        console.log('Model added to scene');
+        console.log('GLTF Model added to scene');
       },
       (progress) => {
         if (progress.total > 0) {
           const percent = Math.round((progress.loaded / progress.total) * 100);
-          console.log(`Loading model: ${percent}%`);
+          console.log(`Loading GLTF: ${percent}%`);
         }
       },
       (error) => {
-        console.error('Error loading model:', error);
-        // Fallback: create a stylized sword shape
-        const group = new THREE.Group();
-        
-        // Blade
-        const bladeGeometry = new THREE.BoxGeometry(0.3, 5, 0.1);
-        const bladeMaterial = new THREE.MeshStandardMaterial({
-          color: 0xe8e8e8,
-          metalness: 0.3,
-          roughness: 0.15,
-        });
-        const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
-        blade.position.y = 2;
-        group.add(blade);
-        
-        // Guard
-        const guardGeometry = new THREE.BoxGeometry(2, 0.2, 0.3);
-        const guard = new THREE.Mesh(guardGeometry, bladeMaterial);
-        guard.position.y = 0;
-        group.add(guard);
-        
-        // Handle
-        const handleGeometry = new THREE.CylinderGeometry(0.15, 0.15, 1.5, 8);
-        const handle = new THREE.Mesh(handleGeometry, bladeMaterial);
-        handle.position.y = -1;
-        group.add(handle);
-        
-        // Pommel
-        const pommelGeometry = new THREE.SphereGeometry(0.25, 16, 16);
-        const pommel = new THREE.Mesh(pommelGeometry, bladeMaterial);
-        pommel.position.y = -1.8;
-        group.add(pommel);
-        
-        scene.add(group);
-        modelRef.current = group;
-        console.log('Fallback sword created');
+        console.error('GLTF load failed, using fallback sword:', error);
+        // Fallback is already in scene
       }
     );
 
