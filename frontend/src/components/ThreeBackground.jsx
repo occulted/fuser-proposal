@@ -35,6 +35,8 @@ useEffect(() => {
     if (mount && renderer?.domElement) {
       mount.removeChild(renderer.domElement);
     }
+  };
+}, []);
   
 
     // Renderer setup
