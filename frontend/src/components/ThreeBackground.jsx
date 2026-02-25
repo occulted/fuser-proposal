@@ -83,12 +83,16 @@ const ThreeBackground = () => {
         // Center the model
         const box = new THREE.Box3().setFromObject(model);
         const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        
+        console.log('Model size:', size);
+        console.log('Model center:', center);
+        
         model.position.sub(center);
         
-        // Scale to fit - make it bigger
-        const size = box.getSize(new THREE.Vector3());
+        // Scale to fit - make it visible
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 2.5 / maxDim;
+        const scale = 2 / maxDim;
         model.scale.setScalar(scale);
         
         model.position.y = 0;
@@ -102,15 +106,17 @@ const ThreeBackground = () => {
           if (child.isMesh) {
             child.material = new THREE.MeshStandardMaterial({
               color: 0xffffff,
-              metalness: 0.1,
-              roughness: 0.2,
-              envMapIntensity: 1.5,
+              metalness: 0.2,
+              roughness: 0.1,
+              envMapIntensity: 2,
             });
+            child.castShadow = true;
+            child.receiveShadow = true;
           }
         });
         
         scene.add(model);
-        console.log('Model loaded successfully');
+        console.log('Model loaded and added to scene');
       },
       (progress) => {
         if (progress.total > 0) {
