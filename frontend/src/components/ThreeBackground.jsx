@@ -83,7 +83,7 @@ const ThreeBackground = () => {
     // Load GLTF Model
     const loader = new GLTFLoader();
     
-    // Create fallback first to ensure something always appears
+    // Create fallback function
     const createFallbackSword = () => {
       const group = new THREE.Group();
       
@@ -174,77 +174,91 @@ const ThreeBackground = () => {
       return group;
     };
     
-    // Always create and show fallback sword
-    const fallbackSword = createFallbackSword();
-    scene.add(fallbackSword);
-    modelRef.current = fallbackSword;
-    console.log('Fallback decorative sword created and displayed');
-    
-    // Try to load GLTF but don't wait for it
+    // Try to load GLTF first
+    console.log('Attempting to load GLTF model...');
     loader.load(
       '/scene.gltf',
       (gltf) => {
-        // Remove fallback
-        scene.remove(fallbackSword);
+        console.log('GLTF loaded successfully!');
         
         const model = gltf.scene;
-        modelRef.current = model;
         
         // Get model dimensions
         const box = new THREE.Box3().setFromObject(model);
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
         
-        console.log('GLTF Model loaded - Size:', size.x.toFixed(2), size.y.toFixed(2), size.z.toFixed(2));
-        console.log('GLTF Model center:', center.x.toFixed(2), center.y.toFixed(2), center.z.toFixed(2));
+        console.log('GLTF Size:', size.x.toFixed(2), 'x', size.y.toFixed(2), 'x', size.z.toFixed(2));
+        console.log('GLTF Center:', center.x.toFixed(2), center.y.toFixed(2), center.z.toFixed(2));
         
-        // Center the model
-        model.position.x = -center.x;
-        model.position.y = -center.y;
-        model.position.z = -center.z;
+        // Center the model perfectly
+        model.position.set(-center.x, -center.y, -center.z);
         
-        // Scale to occupy 40-50% of viewport height
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const targetSize = 6;
-        const scale = targetSize / maxDim;
+        // Calculate scale - the model is 31.97 units tall, we want it about 12 units tall
+        const targetHeight = 12;
+        const scale = targetHeight / size.y;
         model.scale.setScalar(scale);
         
-        model.position.y = 0;
+        console.log('Applied scale:', scale.toFixed(3));
         
         // Set initial rotation to 0
         model.rotation.set(0, 0, 0);
         
-        // Apply white glossy material
+        // Apply glossy light gray material to all meshes
         let materialCount = 0;
+        let geometryCount = 0;
+        
         model.traverse((child) => {
           if (child.isMesh) {
+            geometryCount++;
+            
+            // Create a bright, visible material
             child.material = new THREE.MeshStandardMaterial({
-              color: 0xc8c8c8,
-              metalness: 0.7,
-              roughness: 0.15,
-              envMapIntensity: 3,
+              color: 0xd0d0d0, // Light gray
+              metalness: 0.6,
+              roughness: 0.2,
+              envMapIntensity: 2.5,
               side: THREE.DoubleSide,
+              transparent: false,
+              opacity: 1,
             });
+            
             child.castShadow = true;
             child.receiveShadow = true;
             materialCount++;
+            
+            // Log mesh info for debugging
+            if (geometryCount <= 3) {
+              console.log(`Mesh ${geometryCount}:`, child.geometry.attributes.position.count, 'vertices');
+            }
           }
         });
         
-        console.log(`Applied material to ${materialCount} meshes`);
+        console.log(`Total meshes: ${materialCount}, applied glossy material to all`);
         
+        // Add to scene
         scene.add(model);
-        console.log('GLTF Model added to scene');
+        modelRef.current = model;
+        
+        console.log('✓ GLTF model successfully added to scene and should be visible');
       },
       (progress) => {
-        if (progress.total > 0) {
+        if (progress.lengthComputable && progress.total > 0) {
           const percent = Math.round((progress.loaded / progress.total) * 100);
           console.log(`Loading GLTF: ${percent}%`);
+        } else {
+          console.log('Loading GLTF:', progress.loaded, 'bytes loaded');
         }
       },
       (error) => {
-        console.error('GLTF load failed, using fallback sword:', error);
-        // Fallback is already in scene
+        console.error('❌ GLTF loading failed:', error.message || error);
+        console.log('→ Using fallback procedural sword instead');
+        
+        // Use fallback sword
+        const fallbackSword = createFallbackSword();
+        scene.add(fallbackSword);
+        modelRef.current = fallbackSword;
+        console.log('✓ Fallback sword created and displayed');
       }
     );
 
