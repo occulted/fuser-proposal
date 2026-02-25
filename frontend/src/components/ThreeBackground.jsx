@@ -20,14 +20,14 @@ const ThreeBackground = () => {
     scene.background = new THREE.Color(0xffffff);
     sceneRef.current = scene;
 
-    // Camera setup - closer for bigger model
+    // Camera setup - positioned to see the thin sword from a slight angle
     const camera = new THREE.PerspectiveCamera(
       45,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
-    camera.position.set(0, 2, 8);
+    camera.position.set(0.5, 2, 8); // Slight angle to see depth
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
@@ -194,12 +194,15 @@ const ThreeBackground = () => {
         // Center the model perfectly
         model.position.set(-center.x, -center.y, -center.z);
         
-        // Calculate scale - the model is 31.97 units tall, we want it about 12 units tall
-        const targetHeight = 12;
+        // Calculate scale - the model is 31.97 units tall, we want it about 13 units tall
+        const targetHeight = 13;
         const scale = targetHeight / size.y;
         model.scale.setScalar(scale);
         
-        console.log('Applied scale:', scale.toFixed(3));
+        // Rotate slightly to show depth (model is very thin: 0.41 units)
+        model.rotation.y = 0.15; // Slight rotation to see the sword better
+        
+        console.log('Applied scale:', scale.toFixed(3), '| Final height:', (size.y * scale).toFixed(2));
         
         // Set initial rotation to 0
         model.rotation.set(0, 0, 0);
