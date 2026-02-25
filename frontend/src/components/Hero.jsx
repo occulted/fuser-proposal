@@ -11,11 +11,12 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
+    <section className="relative min-h-screen flex flex-col items-center justify-between overflow-hidden bg-white">
       <ThreeBackground />
       
-      <div className="relative z-10 text-center px-6 max-w-7xl mx-auto py-32">
-        <div className="mb-16">
+      {/* Top text content */}
+      <div className="relative z-10 text-center px-6 max-w-7xl mx-auto pt-32 pb-8">
+        <div className="mb-8">
           <p className="text-black text-xs uppercase tracking-[0.3em] mb-8 font-light">PROJECT</p>
           <h1 className="text-5xl md:text-7xl lg:text-[120px] font-bold text-black mb-12 leading-[0.9] tracking-tight">
             FUSER STUDIO
@@ -24,21 +25,25 @@ const Hero = () => {
             <br />
             WORKSHOP
           </h1>
-          <div className="h-px w-32 bg-black mx-auto mb-8"></div>
-          <p className="text-xl md:text-2xl text-black font-light mb-4 tracking-wide">
-            Curated Artist Edition
-          </p>
-          <p className="text-sm text-gray-600 uppercase tracking-[0.2em] font-light">
-            by Ikaro Cavalcante (occulted)
-          </p>
-          <p className="text-xs text-gray-500 mt-4 uppercase tracking-wider font-light">
-            Brazil / São Paulo Activation
-          </p>
         </div>
+      </div>
+
+      {/* Bottom text content */}
+      <div className="relative z-10 text-center px-6 max-w-7xl mx-auto pb-16">
+        <div className="h-px w-32 bg-black mx-auto mb-8"></div>
+        <p className="text-xl md:text-2xl text-black font-light mb-4 tracking-wide">
+          Curated Artist Edition
+        </p>
+        <p className="text-sm text-gray-600 uppercase tracking-[0.2em] font-light">
+          by Ikaro Cavalcante (occulted)
+        </p>
+        <p className="text-xs text-gray-500 mt-4 uppercase tracking-wider font-light">
+          Brazil / São Paulo Activation
+        </p>
 
         <button 
           onClick={scrollToContent}
-          className="mt-16 inline-flex items-center space-x-3 text-black"
+          className="mt-12 inline-flex items-center space-x-3 text-black opacity-70 hover:opacity-100 transition-opacity"
         >
           <span className="text-xs uppercase tracking-[0.3em] font-light">SCROLL TO EXPLORE</span>
           <ArrowDown size={16} className="animate-bounce" />
