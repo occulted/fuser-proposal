@@ -102,10 +102,10 @@ const Investment = () => {
 
         {showReduced && (
           <div className="bg-black border-2 border-t-0 border-white p-8">
-            <p className="text-gray-400 mb-6 font-light">Excluding social posting bonuses (Stories and Feed)</p>
+            <p className="text-gray-400 mb-6 font-light text-sm">Excluding social posting bonuses (Stories and Feed)</p>
             <div className="flex items-center justify-between">
-              <span className="text-white text-xl font-medium uppercase tracking-wide">REDUCED PACKAGE TOTAL</span>
-              <span className="text-white text-4xl font-bold">USD 5,630</span>
+              <span className="text-white text-sm font-medium uppercase tracking-wide">REDUCED PACKAGE TOTAL</span>
+              <span className="text-white text-2xl font-bold">USD 5,630</span>
             </div>
           </div>
         )}
