@@ -1,5 +1,4 @@
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
 
 const NextSteps = () => {
   const steps = [
@@ -13,60 +12,57 @@ const NextSteps = () => {
   ];
 
   return (
-    <section className="relative bg-black py-24 px-6">
+    <section className="relative bg-white py-32 px-6">
       <div className="max-w-5xl mx-auto">
-        <div className="mb-16">
-          <p className="text-gray-500 text-sm uppercase tracking-widest mb-4">05 / Process</p>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Next Steps
+        <div className="mb-20">
+          <p className="text-gray-500 text-xs uppercase tracking-[0.3em] mb-12 font-light">05 / PROCESS</p>
+          <h2 className="text-5xl md:text-7xl font-bold text-black mb-6 tracking-tight">
+            NEXT STEPS
           </h2>
-          <p className="text-gray-400 max-w-2xl">
+          <p className="text-gray-600 font-light">
             Estimated timeline: 3–5 weeks from approval
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-px bg-black">
           {steps.map((step, index) => (
             <div 
               key={index}
-              className="group bg-black border border-gray-800 hover:border-white/20 p-6 transition-all duration-300 hover:bg-gray-900/30"
+              className="bg-white p-8 border-l-2 border-black flex items-center justify-between"
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-6">
-                  <span className="text-3xl font-bold text-gray-800 group-hover:text-gray-700 transition-colors">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
-                  <span className="text-white text-lg">{step}</span>
-                </div>
-                <ArrowRight className="text-gray-700 group-hover:text-white transition-colors" size={20} />
+              <div className="flex items-center space-x-8">
+                <span className="text-5xl font-bold text-gray-200">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+                <span className="text-black font-light">{step}</span>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-br from-gray-900/50 to-black border border-gray-800 p-8">
-          <h3 className="text-white text-xl font-medium mb-6">Terms & Conditions</h3>
-          <div className="grid md:grid-cols-2 gap-6 text-sm">
+        <div className="mt-16 border-2 border-black p-10">
+          <h3 className="text-black text-xl font-medium mb-8 uppercase tracking-wide">TERMS & CONDITIONS</h3>
+          <div className="grid md:grid-cols-2 gap-8 text-sm">
             <div>
-              <p className="text-gray-500 mb-2">Proposal validity</p>
-              <p className="text-white">30 days from submission</p>
+              <p className="text-gray-500 mb-2 uppercase tracking-wider text-xs font-light">PROPOSAL VALIDITY</p>
+              <p className="text-black font-light">30 days from submission</p>
             </div>
             <div>
-              <p className="text-gray-500 mb-2">Payment terms</p>
-              <p className="text-white">50% upon approval / 50% upon delivery</p>
+              <p className="text-gray-500 mb-2 uppercase tracking-wider text-xs font-light">PAYMENT TERMS</p>
+              <p className="text-black font-light">50% upon approval / 50% upon delivery</p>
             </div>
             <div>
-              <p className="text-gray-500 mb-2">Artist bonuses</p>
-              <p className="text-white">Released after verified publication</p>
+              <p className="text-gray-500 mb-2 uppercase tracking-wider text-xs font-light">ARTIST BONUSES</p>
+              <p className="text-black font-light">Released after verified publication</p>
             </div>
             <div>
-              <p className="text-gray-500 mb-2">Platform credits</p>
-              <p className="text-white">Issued directly to participant accounts</p>
+              <p className="text-gray-500 mb-2 uppercase tracking-wider text-xs font-light">PLATFORM CREDITS</p>
+              <p className="text-black font-light">Issued directly to participant accounts</p>
             </div>
           </div>
-          <div className="mt-6 pt-6 border-t border-gray-800">
-            <p className="text-gray-500 mb-2">Usage rights</p>
-            <p className="text-gray-400 text-sm leading-relaxed">
+          <div className="mt-8 pt-8 border-t border-gray-200">
+            <p className="text-gray-500 mb-2 uppercase tracking-wider text-xs font-light">USAGE RIGHTS</p>
+            <p className="text-gray-600 text-sm leading-relaxed font-light">
               Fuser retains marketing and communication usage rights for all content generated during the workshop.
             </p>
           </div>

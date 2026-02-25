@@ -20,105 +20,105 @@ const Investment = () => {
   ];
 
   return (
-    <section id="investment" className="relative bg-gradient-to-b from-black via-gray-900/20 to-black py-24 px-6">
+    <section id="investment" className="relative bg-black py-32 px-6">
       <div className="max-w-5xl mx-auto">
-        <div className="mb-16">
-          <p className="text-gray-500 text-sm uppercase tracking-widest mb-4">04 / Investment</p>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Total Investment
+        <div className="mb-20">
+          <p className="text-gray-500 text-xs uppercase tracking-[0.3em] mb-12 font-light">04 / INVESTMENT</p>
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
+            TOTAL
           </h2>
-          <p className="text-gray-400 max-w-2xl">
-            Curated Workshop — Full Package
-          </p>
+          <h3 className="text-5xl md:text-7xl font-bold text-gray-700 tracking-tight">
+            INVESTMENT
+          </h3>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-px bg-white mb-16">
           {/* Production Costs */}
-          <div className="bg-black border border-gray-800 p-8">
-            <h3 className="text-white text-xl font-medium mb-6">Production</h3>
+          <div className="bg-black border-l-2 border-white p-10">
+            <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">PRODUCTION</h3>
             <div className="space-y-4">
               {productionCosts.map((item, index) => (
-                <div key={index} className="flex items-center justify-between py-2 border-b border-gray-900">
-                  <span className="text-gray-400 text-sm">{item.item}</span>
-                  <span className="text-white font-medium">{item.cost}</span>
+                <div key={index} className="flex items-center justify-between py-3 border-b border-gray-800">
+                  <span className="text-gray-400 text-sm font-light">{item.item}</span>
+                  <span className="text-white font-light">{item.cost}</span>
                 </div>
               ))}
-              <div className="flex items-center justify-between pt-4">
-                <span className="text-white font-medium">Production Subtotal</span>
-                <span className="text-white text-xl font-bold">USD 2,480</span>
+              <div className="flex items-center justify-between pt-6">
+                <span className="text-white font-medium text-sm uppercase tracking-wide">Production Subtotal</span>
+                <span className="text-white text-2xl font-bold">USD 2,480</span>
               </div>
             </div>
           </div>
 
           {/* Facilitator */}
-          <div className="bg-black border border-gray-800 p-8">
-            <h3 className="text-white text-xl font-medium mb-6">Facilitator</h3>
+          <div className="bg-black border-l-2 border-white p-10">
+            <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">FACILITATOR</h3>
             <div className="flex items-center justify-between">
-              <span className="text-gray-400 text-sm">Workshop leadership, preparation, and artist curation</span>
-              <span className="text-white text-xl font-bold">USD 1,650</span>
+              <span className="text-gray-400 text-sm font-light">Workshop leadership, preparation, and artist curation</span>
+              <span className="text-white text-2xl font-bold">USD 1,650</span>
             </div>
           </div>
 
           {/* Artist Incentives */}
-          <div className="bg-black border border-gray-800 p-8">
-            <h3 className="text-white text-xl font-medium mb-6">Artist Incentives (6 Artists)</h3>
+          <div className="bg-black border-l-2 border-white p-10">
+            <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">ARTIST INCENTIVES (6 ARTISTS)</h3>
             <div className="space-y-4">
               {artistIncentives.map((item, index) => (
-                <div key={index} className="flex items-center justify-between py-2 border-b border-gray-900">
-                  <span className="text-gray-400 text-sm">{item.item}</span>
-                  <span className="text-white font-medium">{item.cost}</span>
+                <div key={index} className="flex items-center justify-between py-3 border-b border-gray-800">
+                  <span className="text-gray-400 text-sm font-light">{item.item}</span>
+                  <span className="text-white font-light">{item.cost}</span>
                 </div>
               ))}
-              <div className="flex items-center justify-between pt-4">
-                <span className="text-white font-medium">Incentives Subtotal</span>
-                <span className="text-white text-xl font-bold">USD 2,250</span>
+              <div className="flex items-center justify-between pt-6">
+                <span className="text-white font-medium text-sm uppercase tracking-wide">Incentives Subtotal</span>
+                <span className="text-white text-2xl font-bold">USD 2,250</span>
               </div>
             </div>
           </div>
-
-          {/* Total Investment */}
-          <div className="bg-gradient-to-br from-white/10 to-transparent border-2 border-white/20 p-8">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-white text-2xl font-bold">TOTAL FULL INVESTMENT</span>
-              <span className="text-white text-4xl font-bold">USD 6,380</span>
-            </div>
-            <p className="text-gray-400 text-sm">
-              Complete package including production, facilitation, and full social amplification bonuses.
-            </p>
-          </div>
-
-          {/* Reduced Package Toggle */}
-          <button 
-            onClick={() => setShowReduced(!showReduced)}
-            className="w-full bg-black border border-gray-800 p-6 hover:border-gray-600 transition-colors flex items-center justify-between group"
-          >
-            <span className="text-white font-medium">Optional Reduced Package</span>
-            {showReduced ? 
-              <ChevronUp className="text-gray-500 group-hover:text-white transition-colors" size={20} /> : 
-              <ChevronDown className="text-gray-500 group-hover:text-white transition-colors" size={20} />
-            }
-          </button>
-
-          {showReduced && (
-            <div className="bg-black border border-gray-800 p-8 animate-accordion-down">
-              <p className="text-gray-400 mb-4">Excluding social posting bonuses (Stories and Feed)</p>
-              <div className="flex items-center justify-between">
-                <span className="text-white text-xl font-medium">Reduced Package Total</span>
-                <span className="text-white text-3xl font-bold">USD 5,630</span>
-              </div>
-            </div>
-          )}
         </div>
 
-        {/* Payment Terms */}
-        <div className="mt-16 grid md:grid-cols-2 gap-6">
-          <div className="bg-black border border-gray-800 p-6">
-            <h4 className="text-white font-medium mb-2">Payment Terms</h4>
-            <p className="text-gray-400 text-sm">50% upon approval<br />50% upon delivery</p>
+        {/* Total Investment */}
+        <div className="border-4 border-white p-12 mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <span className="text-white text-2xl font-bold uppercase tracking-wide">TOTAL FULL INVESTMENT</span>
+            <span className="text-white text-6xl font-bold">USD 6,380</span>
           </div>
-          <div className="bg-black border border-gray-800 p-6">
-            <h4 className="text-white font-medium mb-2">Timeline</h4>
-            <p className="text-gray-400 text-sm">3–5 weeks from approval</p>
+          <p className="text-gray-400 text-sm font-light">
+            Complete package including production, facilitation, and full social amplification bonuses.
+          </p>
+        </div>
+
+        {/* Reduced Package Toggle */}
+        <button 
+          onClick={() => setShowReduced(!showReduced)}
+          className="w-full bg-black border-2 border-white p-8 flex items-center justify-between"
+        >
+          <span className="text-white font-medium uppercase tracking-wide text-sm">OPTIONAL REDUCED PACKAGE</span>
+          {showReduced ? 
+            <ChevronUp className="text-white" size={20} /> : 
+            <ChevronDown className="text-white" size={20} />
+          }
+        </button>
+
+        {showReduced && (
+          <div className="bg-black border-2 border-t-0 border-white p-8">
+            <p className="text-gray-400 mb-6 font-light">Excluding social posting bonuses (Stories and Feed)</p>
+            <div className="flex items-center justify-between">
+              <span className="text-white text-xl font-medium uppercase tracking-wide">REDUCED PACKAGE TOTAL</span>
+              <span className="text-white text-4xl font-bold">USD 5,630</span>
+            </div>
+          </div>
+        )}
+
+        {/* Payment Terms */}
+        <div className="mt-16 grid md:grid-cols-2 gap-px bg-white">
+          <div className="bg-black border-l-2 border-white p-8">
+            <h4 className="text-white font-medium mb-3 uppercase tracking-wide text-xs">PAYMENT TERMS</h4>
+            <p className="text-gray-400 text-sm font-light">50% upon approval<br />50% upon delivery</p>
+          </div>
+          <div className="bg-black border-l-2 border-white p-8">
+            <h4 className="text-white font-medium mb-3 uppercase tracking-wide text-xs">TIMELINE</h4>
+            <p className="text-gray-400 text-sm font-light">3–5 weeks from approval</p>
           </div>
         </div>
       </div>

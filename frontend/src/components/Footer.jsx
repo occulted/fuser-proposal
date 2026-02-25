@@ -2,28 +2,27 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="relative bg-black border-t border-gray-900 py-12 px-6">
+    <footer className="relative bg-white border-t-2 border-black py-12 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-          <div className="flex items-center space-x-2">
-            <span className="text-white text-xl font-bold tracking-tight">FUSER</span>
-            <span className="text-gray-600 text-sm">AI Workshop</span>
+        <div className="flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 mb-8">
+          <div>
+            <span className="text-black text-sm font-medium tracking-wider uppercase">FUSER STUDIO WORKSHOP</span>
           </div>
 
-          <div className="flex items-center space-x-8 text-sm text-gray-500">
-            <span>São Paulo Activation</span>
-            <span className="hidden md:inline">•</span>
-            <span>Curated Artists Edition</span>
+          <div className="flex items-center space-x-8 text-xs text-gray-600 uppercase tracking-wider font-light">
+            <span>SÃO PAULO</span>
+            <span>—</span>
+            <span>CURATED EDITION</span>
           </div>
 
-          <div className="text-gray-500 text-sm">
-            © 2025 Fuser. All rights reserved.
+          <div className="text-gray-600 text-xs uppercase tracking-wider font-light">
+            © 2025 IKARO CAVALCANTE
           </div>
         </div>
 
-        <div className="mt-8 pt-8 border-t border-gray-900 text-center">
-          <p className="text-gray-600 text-xs">
-            Proposal validity: 30 days | Timeline: 3-5 weeks from approval
+        <div className="pt-8 border-t border-gray-200 text-center">
+          <p className="text-gray-500 text-xs font-light">
+            PROPOSAL VALIDITY: 30 DAYS  |  TIMELINE: 3-5 WEEKS FROM APPROVAL
           </p>
         </div>
       </div>
