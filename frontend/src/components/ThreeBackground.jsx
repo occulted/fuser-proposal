@@ -93,7 +93,8 @@ const ThreeBackground = () => {
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
         
-        console.log('Model loaded - Size:', size, 'Center:', center);
+        console.log('Model loaded - Size:', size.x.toFixed(2), size.y.toFixed(2), size.z.toFixed(2));
+        console.log('Model center:', center.x.toFixed(2), center.y.toFixed(2), center.z.toFixed(2));
         
         // Center the model
         model.position.x = -center.x;
