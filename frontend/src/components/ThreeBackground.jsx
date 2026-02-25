@@ -12,24 +12,30 @@ const ThreeBackground = () => {
   const previousMousePositionRef = useRef({ x: 0, y: 0 });
   const rotationRef = useRef({ x: 0, y: 0 });
 
-  useEffect(() => {
-    if (!mountRef.current) return;
+useEffect(() => {
+  const mount = mountRef.current;
+  if (!mount) return;
 
-    // Scene setup with WHITE background
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff);
-    sceneRef.current = scene;
+  // Scene setup
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xffffff);
+  sceneRef.current = scene;
 
-    // Camera setup - positioned to see the thin sword from a slight angle
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
+  const camera = new THREE.PerspectiveCamera(
+    45,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    1000
+  );
     camera.position.set(0.5, 2, 8); // Slight angle to see depth
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
+  
+  return () => {
+    if (mount && renderer?.domElement) {
+      mount.removeChild(renderer.domElement);
+    }
+  
 
     // Renderer setup
     const renderer = new THREE.WebGLRenderer({ 
