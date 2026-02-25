@@ -9,21 +9,20 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-    background: #000000;
+    background: #ffffff;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #1f1f1f;
-    border-radius: 4px;
+    background: #cccccc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #333333;
+    background: #999999;
 }
 
 /* Selection color */
 ::selection {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: #000000;
     color: #ffffff;
 }
 
@@ -32,22 +31,22 @@ html {
     overflow-x: hidden;
 }
 
-/* Button hover effects */
+/* Button hover effects - minimal */
 button {
-    transition: transform 0.2s ease, opacity 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+    transition: opacity 0.2s ease;
 }
 
 button:hover {
-    transform: translateY(-1px);
+    opacity: 0.7;
 }
 
-button:active {
-    transform: translateY(0);
-}
-
-/* Link hover effects */
+/* Link hover effects - minimal */
 a {
-    transition: color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+    transition: opacity 0.2s ease;
+}
+
+a:hover {
+    opacity: 0.7;
 }
 
 /* Remove focus outline for mouse users, keep for keyboard */
@@ -58,6 +57,6 @@ a:focus:not(:focus-visible) {
 
 button:focus-visible,
 a:focus-visible {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline: 2px solid #000000;
     outline-offset: 2px;
 }
