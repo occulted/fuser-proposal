@@ -113,19 +113,25 @@ const ThreeBackground = () => {
         // Set initial rotation to 0
         model.rotation.set(0, 0, 0);
         
-        // Apply white glossy material with subtle gray tones
+        // Apply white glossy material
+        let materialCount = 0;
         model.traverse((child) => {
           if (child.isMesh) {
+            // Force visible white glossy material
             child.material = new THREE.MeshStandardMaterial({
-              color: 0xe8e8e8, // Very light gray, almost white
-              metalness: 0.3,
-              roughness: 0.15,
-              envMapIntensity: 2,
+              color: 0xdddddd, // Light gray
+              metalness: 0.6,
+              roughness: 0.2,
+              envMapIntensity: 3,
+              side: THREE.DoubleSide, // Render both sides
             });
             child.castShadow = true;
             child.receiveShadow = true;
+            materialCount++;
           }
         });
+        
+        console.log(`Applied material to ${materialCount} meshes`);
         
         scene.add(model);
         console.log('Model added to scene');
