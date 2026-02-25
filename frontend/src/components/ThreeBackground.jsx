@@ -1,12 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
+import { GLTFLoader } from 'three-stdlib';
 
 const ThreeBackground = () => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
-  const particlesRef = useRef(null);
+  const modelRef = useRef(null);
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -22,7 +23,8 @@ const ThreeBackground = () => {
       0.1,
       1000
     );
-    camera.position.z = 50;
+    camera.position.z = 5;
+    camera.position.y = 1;
     cameraRef.current = camera;
 
     // Renderer setup
@@ -35,13 +37,58 @@ const ThreeBackground = () => {
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Create particles - more sparse and subtle
+    // Lighting
+    const ambientLight = new THREE.AmbientLight(0x000000, 1);
+    scene.add(ambientLight);
+
+    const directionalLight1 = new THREE.DirectionalLight(0x000000, 0.8);
+    directionalLight1.position.set(5, 5, 5);
+    scene.add(directionalLight1);
+
+    const directionalLight2 = new THREE.DirectionalLight(0x000000, 0.5);
+    directionalLight2.position.set(-5, 3, -5);
+    scene.add(directionalLight2);
+
+    // Load GLTF Model
+    const loader = new GLTFLoader();
+    loader.load(
+      '/scene.gltf',
+      (gltf) => {
+        const model = gltf.scene;
+        modelRef.current = model;
+        
+        // Scale and position the model
+        model.scale.set(2, 2, 2);
+        model.position.set(0, -1, 0);
+        
+        // Make model grayscale/black
+        model.traverse((child) => {
+          if (child.isMesh) {
+            child.material = new THREE.MeshStandardMaterial({
+              color: 0x000000,
+              metalness: 0.1,
+              roughness: 0.8,
+            });
+          }
+        });
+        
+        scene.add(model);
+      },
+      (progress) => {
+        console.log('Loading model...', (progress.loaded / progress.total * 100) + '%');
+      },
+      (error) => {
+        console.error('Error loading model:', error);
+      }
+    );
+
+    // Create minimal particles
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 800;
+    const particlesCount = 500;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 120;
+      posArray[i] = (Math.random() - 0.5) * 15;
     }
 
     particlesGeometry.setAttribute(
@@ -50,28 +97,14 @@ const ThreeBackground = () => {
     );
 
     const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.1,
+      size: 0.05,
       color: 0x000000,
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.2,
     });
 
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
-    particlesRef.current = particlesMesh;
-
-    // Create single geometric shape - minimal
-    const geometry = new THREE.OctahedronGeometry(3, 0);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x000000,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.15,
-    });
-
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(0, 0, -10);
-    scene.add(mesh);
 
     // Mouse movement effect - very subtle
     let mouseX = 0;
@@ -90,17 +123,16 @@ const ThreeBackground = () => {
       animationFrameId = requestAnimationFrame(animate);
 
       // Rotate particles very slowly
-      if (particlesRef.current) {
-        particlesRef.current.rotation.y += 0.0005;
+      particlesMesh.rotation.y += 0.0003;
+
+      // Rotate GLTF model slowly
+      if (modelRef.current) {
+        modelRef.current.rotation.y += 0.003;
       }
 
-      // Rotate shape slowly
-      mesh.rotation.x += 0.002;
-      mesh.rotation.y += 0.002;
-
       // Very subtle camera movement based on mouse
-      camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
-      camera.position.y += (mouseY * 2 - camera.position.y) * 0.02;
+      camera.position.x += (mouseX * 1 - camera.position.x) * 0.02;
+      camera.position.y += (1 + mouseY * 1 - camera.position.y) * 0.02;
       camera.lookAt(scene.position);
 
       renderer.render(scene, camera);
@@ -131,8 +163,6 @@ const ThreeBackground = () => {
       }
       particlesGeometry.dispose();
       particlesMaterial.dispose();
-      geometry.dispose();
-      material.dispose();
       rendererRef.current?.dispose();
     };
   }, []);
