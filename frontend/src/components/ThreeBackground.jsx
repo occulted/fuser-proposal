@@ -37,17 +37,9 @@ const ThreeBackground = () => {
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0x000000, 1);
+    // Lighting - simple for basic materials
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
-
-    const directionalLight1 = new THREE.DirectionalLight(0x000000, 0.8);
-    directionalLight1.position.set(5, 5, 5);
-    scene.add(directionalLight1);
-
-    const directionalLight2 = new THREE.DirectionalLight(0x000000, 0.5);
-    directionalLight2.position.set(-5, 3, -5);
-    scene.add(directionalLight2);
 
     // Load GLTF Model
     const loader = new GLTFLoader();
@@ -57,28 +49,51 @@ const ThreeBackground = () => {
         const model = gltf.scene;
         modelRef.current = model;
         
-        // Scale and position the model
-        model.scale.set(2, 2, 2);
-        model.position.set(0, -1, 0);
+        // Center the model
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
         
-        // Make model grayscale/black
+        // Scale to fit
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        const scale = 3 / maxDim;
+        model.scale.setScalar(scale);
+        
+        model.position.y = -0.5;
+        
+        // Make model black with basic material
         model.traverse((child) => {
           if (child.isMesh) {
-            child.material = new THREE.MeshStandardMaterial({
+            child.material = new THREE.MeshBasicMaterial({
               color: 0x000000,
-              metalness: 0.1,
-              roughness: 0.8,
+              wireframe: false,
             });
           }
         });
         
         scene.add(model);
+        console.log('Model loaded successfully');
       },
       (progress) => {
-        console.log('Loading model...', (progress.loaded / progress.total * 100) + '%');
+        if (progress.total > 0) {
+          console.log('Loading model...', Math.round((progress.loaded / progress.total) * 100) + '%');
+        }
       },
       (error) => {
         console.error('Error loading model:', error);
+        // If model fails to load, create a fallback simple shape
+        const geometry = new THREE.OctahedronGeometry(1.5, 0);
+        const material = new THREE.MeshBasicMaterial({
+          color: 0x000000,
+          wireframe: true,
+          transparent: true,
+          opacity: 0.15,
+        });
+        const fallbackMesh = new THREE.Mesh(geometry, material);
+        fallbackMesh.position.set(0, 0, 0);
+        scene.add(fallbackMesh);
+        modelRef.current = fallbackMesh;
       }
     );
 
