@@ -26,7 +26,7 @@ const ThreeBackground = () => {
       0.1,
       1000
     );
-    camera.position.z = 5;
+    camera.position.z = 4;
     camera.position.y = 0;
     cameraRef.current = camera;
 
@@ -85,13 +85,14 @@ const ThreeBackground = () => {
         const center = box.getCenter(new THREE.Vector3());
         model.position.sub(center);
         
-        // Scale to fit
+        // Scale to fit - make it bigger
         const size = box.getSize(new THREE.Vector3());
         const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = 3 / maxDim;
+        const scale = 2.5 / maxDim;
         model.scale.setScalar(scale);
         
         model.position.y = 0;
+        model.position.z = 0;
         
         // Set initial rotation to 0
         model.rotation.set(0, 0, 0);
@@ -157,8 +158,11 @@ const ThreeBackground = () => {
     scene.add(particlesMesh);
 
     // Mouse drag interaction
+    const canvas = renderer.domElement;
+    
     const handleMouseDown = (event) => {
       isDraggingRef.current = true;
+      canvas.style.cursor = 'grabbing';
       previousMousePositionRef.current = {
         x: event.clientX,
         y: event.clientY
@@ -182,6 +186,7 @@ const ThreeBackground = () => {
 
     const handleMouseUp = () => {
       isDraggingRef.current = false;
+      canvas.style.cursor = 'grab';
     };
 
     window.addEventListener('mousedown', handleMouseDown);
