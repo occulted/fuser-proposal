@@ -11,39 +11,39 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-white">
       <ThreeBackground />
       
-      <div className="relative z-10 text-center px-6 max-w-5xl mx-auto">
-        <div className="mb-8">
-          <p className="text-gray-400 text-sm uppercase tracking-widest mb-4">Project</p>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 leading-tight">
-            FUSER AI
+      <div className="relative z-10 text-center px-6 max-w-7xl mx-auto py-32">
+        <div className="mb-16">
+          <p className="text-black text-xs uppercase tracking-[0.3em] mb-8 font-light">PROJECT</p>
+          <h1 className="text-5xl md:text-7xl lg:text-[120px] font-bold text-black mb-12 leading-[0.9] tracking-tight">
+            FUSER STUDIO
             <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
-              CREATIVE
-            </span>
+            CREATIVE
             <br />
             WORKSHOP
           </h1>
-          <p className="text-xl md:text-2xl text-gray-400 mb-4">
-            Curated Artists Edition
+          <div className="h-px w-32 bg-black mx-auto mb-8"></div>
+          <p className="text-xl md:text-2xl text-black font-light mb-4 tracking-wide">
+            Curated Artist Edition
           </p>
-          <p className="text-gray-500 text-sm md:text-base max-w-2xl mx-auto">
-            São Paulo Activation | US Market Standard Model
+          <p className="text-sm text-gray-600 uppercase tracking-[0.2em] font-light">
+            by Ikaro Cavalcante (occulted)
+          </p>
+          <p className="text-xs text-gray-500 mt-4 uppercase tracking-wider font-light">
+            Brazil / São Paulo Activation
           </p>
         </div>
 
         <button 
           onClick={scrollToContent}
-          className="mt-12 group inline-flex items-center space-x-2 text-gray-400 hover:text-white transition-all duration-300"
+          className="mt-16 inline-flex items-center space-x-3 text-black"
         >
-          <span className="text-sm uppercase tracking-widest">Explore</span>
-          <ArrowDown size={20} className="group-hover:translate-y-1 transition-transform" />
+          <span className="text-xs uppercase tracking-[0.3em] font-light">SCROLL TO EXPLORE</span>
+          <ArrowDown size={16} className="animate-bounce" />
         </button>
       </div>
-
-      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent" />
     </section>
   );
 };
