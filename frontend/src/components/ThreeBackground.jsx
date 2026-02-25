@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import * THREE from 'three';
+import * as THREE from 'three';
 
 const ThreeBackground = () => {
   const mountRef = useRef(null);
