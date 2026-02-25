@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three';
+import * THREE from 'three';
 
 const ThreeBackground = () => {
   const mountRef = useRef(null);
@@ -35,13 +35,13 @@ const ThreeBackground = () => {
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Create particles
+    // Create particles - more sparse and subtle
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1500;
+    const particlesCount = 800;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 100;
+      posArray[i] = (Math.random() - 0.5) * 120;
     }
 
     particlesGeometry.setAttribute(
@@ -50,43 +50,30 @@ const ThreeBackground = () => {
     );
 
     const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.15,
-      color: 0xffffff,
+      size: 0.1,
+      color: 0x000000,
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.3,
     });
 
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
     particlesRef.current = particlesMesh;
 
-    // Create geometric shapes
-    const geometries = [
-      new THREE.OctahedronGeometry(2, 0),
-      new THREE.TetrahedronGeometry(2, 0),
-      new THREE.IcosahedronGeometry(2, 0),
-    ];
-
+    // Create single geometric shape - minimal
+    const geometry = new THREE.OctahedronGeometry(3, 0);
     const material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: 0x000000,
       wireframe: true,
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.15,
     });
 
-    const shapes = [];
-    geometries.forEach((geometry, index) => {
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(
-        (index - 1) * 15,
-        Math.sin(index) * 10,
-        -20
-      );
-      scene.add(mesh);
-      shapes.push(mesh);
-    });
+    const mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(0, 0, -10);
+    scene.add(mesh);
 
-    // Mouse movement effect
+    // Mouse movement effect - very subtle
     let mouseX = 0;
     let mouseY = 0;
 
@@ -102,21 +89,18 @@ const ThreeBackground = () => {
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
 
-      // Rotate particles
+      // Rotate particles very slowly
       if (particlesRef.current) {
-        particlesRef.current.rotation.y += 0.001;
-        particlesRef.current.rotation.x += 0.0005;
+        particlesRef.current.rotation.y += 0.0005;
       }
 
-      // Rotate shapes
-      shapes.forEach((shape, index) => {
-        shape.rotation.x += 0.005 * (index + 1);
-        shape.rotation.y += 0.005 * (index + 1);
-      });
+      // Rotate shape slowly
+      mesh.rotation.x += 0.002;
+      mesh.rotation.y += 0.002;
 
-      // Camera movement based on mouse
-      camera.position.x += (mouseX * 5 - camera.position.x) * 0.05;
-      camera.position.y += (mouseY * 5 - camera.position.y) * 0.05;
+      // Very subtle camera movement based on mouse
+      camera.position.x += (mouseX * 2 - camera.position.x) * 0.02;
+      camera.position.y += (mouseY * 2 - camera.position.y) * 0.02;
       camera.lookAt(scene.position);
 
       renderer.render(scene, camera);
@@ -147,7 +131,7 @@ const ThreeBackground = () => {
       }
       particlesGeometry.dispose();
       particlesMaterial.dispose();
-      geometries.forEach(g => g.dispose());
+      geometry.dispose();
       material.dispose();
       rendererRef.current?.dispose();
     };
