@@ -8,6 +8,9 @@ const ThreeBackground = () => {
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const modelRef = useRef(null);
+  const isDraggingRef = useRef(false);
+  const previousMousePositionRef = useRef({ x: 0, y: 0 });
+  const rotationRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
     if (!mountRef.current) return;
@@ -18,13 +21,13 @@ const ThreeBackground = () => {
 
     // Camera setup
     const camera = new THREE.PerspectiveCamera(
-      75,
+      50,
       window.innerWidth / window.innerHeight,
       0.1,
       1000
     );
     camera.position.z = 5;
-    camera.position.y = 1;
+    camera.position.y = 0;
     cameraRef.current = camera;
 
     // Renderer setup
@@ -34,12 +37,40 @@ const ThreeBackground = () => {
     });
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
     mountRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Lighting - simple for basic materials
+    // Create simple environment map (simulating HDRI)
+    const pmremGenerator = new THREE.PMREMGenerator(renderer);
+    pmremGenerator.compileEquirectangularShader();
+
+    // Create a simple gradient environment
+    const envScene = new THREE.Scene();
+    const envCamera = new THREE.PerspectiveCamera();
+    const envGeometry = new THREE.SphereGeometry(100, 32, 32);
+    const envMaterial = new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      side: THREE.BackSide,
+    });
+    const envMesh = new THREE.Mesh(envGeometry, envMaterial);
+    envScene.add(envMesh);
+
+    const envMap = pmremGenerator.fromScene(envScene).texture;
+    scene.environment = envMap;
+
+    // Lighting for glossy materials
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
+
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight1.position.set(5, 5, 5);
+    scene.add(directionalLight1);
+
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.4);
+    directionalLight2.position.set(-5, 3, -5);
+    scene.add(directionalLight2);
 
     // Load GLTF Model
     const loader = new GLTFLoader();
@@ -60,14 +91,19 @@ const ThreeBackground = () => {
         const scale = 3 / maxDim;
         model.scale.setScalar(scale);
         
-        model.position.y = -0.5;
+        model.position.y = 0;
         
-        // Make model black with basic material
+        // Set initial rotation to 0
+        model.rotation.set(0, 0, 0);
+        
+        // Apply white glossy material
         model.traverse((child) => {
           if (child.isMesh) {
-            child.material = new THREE.MeshBasicMaterial({
-              color: 0x000000,
-              wireframe: false,
+            child.material = new THREE.MeshStandardMaterial({
+              color: 0xffffff,
+              metalness: 0.1,
+              roughness: 0.2,
+              envMapIntensity: 1.5,
             });
           }
         });
@@ -82,16 +118,15 @@ const ThreeBackground = () => {
       },
       (error) => {
         console.error('Error loading model:', error);
-        // If model fails to load, create a fallback simple shape
-        const geometry = new THREE.OctahedronGeometry(1.5, 0);
-        const material = new THREE.MeshBasicMaterial({
-          color: 0x000000,
-          wireframe: true,
-          transparent: true,
-          opacity: 0.15,
+        // Fallback shape with white glossy material
+        const geometry = new THREE.TorusKnotGeometry(1, 0.3, 100, 16);
+        const material = new THREE.MeshStandardMaterial({
+          color: 0xffffff,
+          metalness: 0.1,
+          roughness: 0.2,
+          envMapIntensity: 1.5,
         });
         const fallbackMesh = new THREE.Mesh(geometry, material);
-        fallbackMesh.position.set(0, 0, 0);
         scene.add(fallbackMesh);
         modelRef.current = fallbackMesh;
       }
@@ -99,7 +134,7 @@ const ThreeBackground = () => {
 
     // Create minimal particles
     const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 500;
+    const particlesCount = 300;
     const posArray = new Float32Array(particlesCount * 3);
 
     for (let i = 0; i < particlesCount * 3; i++) {
@@ -113,24 +148,80 @@ const ThreeBackground = () => {
 
     const particlesMaterial = new THREE.PointsMaterial({
       size: 0.05,
-      color: 0x000000,
+      color: 0xcccccc,
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.3,
     });
 
     const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
     scene.add(particlesMesh);
 
-    // Mouse movement effect - very subtle
-    let mouseX = 0;
-    let mouseY = 0;
-
-    const handleMouseMove = (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+    // Mouse drag interaction
+    const handleMouseDown = (event) => {
+      isDraggingRef.current = true;
+      previousMousePositionRef.current = {
+        x: event.clientX,
+        y: event.clientY
+      };
     };
 
+    const handleMouseMove = (event) => {
+      if (!isDraggingRef.current || !modelRef.current) return;
+
+      const deltaX = event.clientX - previousMousePositionRef.current.x;
+      const deltaY = event.clientY - previousMousePositionRef.current.y;
+
+      rotationRef.current.y += deltaX * 0.01;
+      rotationRef.current.x += deltaY * 0.01;
+
+      previousMousePositionRef.current = {
+        x: event.clientX,
+        y: event.clientY
+      };
+    };
+
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+    };
+
+    window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseup', handleMouseUp);
+    window.addEventListener('mouseleave', handleMouseUp);
+
+    // Touch events for mobile
+    const handleTouchStart = (event) => {
+      if (event.touches.length === 1) {
+        isDraggingRef.current = true;
+        previousMousePositionRef.current = {
+          x: event.touches[0].clientX,
+          y: event.touches[0].clientY
+        };
+      }
+    };
+
+    const handleTouchMove = (event) => {
+      if (!isDraggingRef.current || !modelRef.current || event.touches.length !== 1) return;
+
+      const deltaX = event.touches[0].clientX - previousMousePositionRef.current.x;
+      const deltaY = event.touches[0].clientY - previousMousePositionRef.current.y;
+
+      rotationRef.current.y += deltaX * 0.01;
+      rotationRef.current.x += deltaY * 0.01;
+
+      previousMousePositionRef.current = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY
+      };
+    };
+
+    const handleTouchEnd = () => {
+      isDraggingRef.current = false;
+    };
+
+    window.addEventListener('touchstart', handleTouchStart);
+    window.addEventListener('touchmove', handleTouchMove);
+    window.addEventListener('touchend', handleTouchEnd);
 
     // Animation loop
     let animationFrameId;
@@ -138,17 +229,13 @@ const ThreeBackground = () => {
       animationFrameId = requestAnimationFrame(animate);
 
       // Rotate particles very slowly
-      particlesMesh.rotation.y += 0.0003;
+      particlesMesh.rotation.y += 0.0002;
 
-      // Rotate GLTF model slowly
+      // Apply rotation to model based on user interaction
       if (modelRef.current) {
-        modelRef.current.rotation.y += 0.003;
+        modelRef.current.rotation.x = rotationRef.current.x;
+        modelRef.current.rotation.y = rotationRef.current.y;
       }
-
-      // Very subtle camera movement based on mouse
-      camera.position.x += (mouseX * 1 - camera.position.x) * 0.02;
-      camera.position.y += (1 + mouseY * 1 - camera.position.y) * 0.02;
-      camera.lookAt(scene.position);
 
       renderer.render(scene, camera);
     };
@@ -168,16 +255,25 @@ const ThreeBackground = () => {
 
     // Cleanup
     return () => {
+      window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+      window.removeEventListener('mouseleave', handleMouseUp);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', handleResize);
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
       }
-      if (mountRef.current && rendererRef.current) {
-        mountRef.current.removeChild(rendererRef.current.domElement);
+      const mount = mountRef.current;
+      if (mount && rendererRef.current) {
+        mount.removeChild(rendererRef.current.domElement);
       }
       particlesGeometry.dispose();
       particlesMaterial.dispose();
+      envMap.dispose();
+      pmremGenerator.dispose();
       rendererRef.current?.dispose();
     };
   }, []);
@@ -192,6 +288,7 @@ const ThreeBackground = () => {
         width: '100%',
         height: '100%',
         zIndex: 0,
+        cursor: 'grab',
       }}
     />
   );
