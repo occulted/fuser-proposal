@@ -1,16 +1,13 @@
 import React from 'react';
-import { Lightbulb, Camera, Users, Share2, Video, Sparkles } from 'lucide-react';
 
 const Production = () => {
   const specifications = [
     {
-      icon: <Lightbulb size={24} />,
-      title: 'Visual Environment',
+      title: 'VISUAL ENVIRONMENT',
       description: 'Gallery space with controlled lighting, projection setup, and immersive layout suitable for AI-based visual demonstrations.'
     },
     {
-      icon: <Users size={24} />,
-      title: 'Guided Interaction',
+      title: 'GUIDED INTERACTION',
       description: 'Advanced workflow session led by Ikaro Cavalcante (occulted), including platform deep dive, prompt engineering methodology, and real-time creation sessions.',
       details: [
         'Platform deep dive',
@@ -21,16 +18,14 @@ const Production = () => {
       ]
     },
     {
-      icon: <Camera size={24} />,
-      title: 'Professional Documentation',
+      title: 'PROFESSIONAL DOCUMENTATION',
       description: '3–4 hours of photography coverage with edited image delivery for Fuser and participating artists.',
       details: [
         'Commercial usage rights for brand communication'
       ]
     },
     {
-      icon: <Share2 size={24} />,
-      title: 'Social Strategy',
+      title: 'SOCIAL STRATEGY',
       description: 'Structured incentive system designed to stimulate Instagram Stories and Feed posts featuring workshop outputs.',
       details: [
         'Instagram Stories tagging Fuser',
@@ -39,66 +34,51 @@ const Production = () => {
       ]
     },
     {
-      icon: <Video size={24} />,
-      title: 'Technical Infrastructure',
+      title: 'TECHNICAL INFRASTRUCTURE',
       description: 'Professional projector rental, production assistant, and basic hospitality including coffee and light catering.'
     }
   ];
 
   return (
-    <section id="production" className="relative bg-gradient-to-b from-black via-gray-900/30 to-black py-24 px-6">
+    <section id="production" className="relative bg-black py-32 px-6">
       <div className="max-w-6xl mx-auto">
-        <div className="mb-16">
-          <p className="text-gray-500 text-sm uppercase tracking-widest mb-4">02 / Specifications</p>
-          <h2 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Production
-            <br />
-            <span className="text-gray-600">Specifications</span>
+        <div className="mb-20">
+          <p className="text-gray-500 text-xs uppercase tracking-[0.3em] mb-12 font-light">02 / SPECIFICATIONS</p>
+          <h2 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
+            PRODUCTION
           </h2>
-          <p className="text-gray-400 max-w-2xl">
-            Comprehensive setup designed for immersive creative experience and professional content generation.
-          </p>
+          <h3 className="text-5xl md:text-7xl font-bold text-gray-700 tracking-tight">
+            SPECIFICATIONS
+          </h3>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-px bg-white">
           {specifications.map((spec, index) => (
             <div 
               key={index}
-              className="group bg-black border border-gray-800 hover:border-gray-600 transition-all duration-300 p-8 hover:bg-gray-900/30"
+              className="bg-black p-10 border-l-2 border-white"
             >
-              <div className="flex items-start space-x-6">
-                <div className="text-gray-500 group-hover:text-white transition-colors flex-shrink-0">
-                  {spec.icon}
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-white text-xl font-medium mb-3">{spec.title}</h3>
-                  <p className="text-gray-400 leading-relaxed mb-4">{spec.description}</p>
-                  {spec.details && (
-                    <ul className="space-y-2">
-                      {spec.details.map((detail, idx) => (
-                        <li key={idx} className="text-gray-500 text-sm flex items-center space-x-2">
-                          <span className="w-1 h-1 bg-gray-600 rounded-full"></span>
-                          <span>{detail}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
+              <h3 className="text-white text-sm font-medium mb-4 uppercase tracking-wide">{spec.title}</h3>
+              <p className="text-gray-400 leading-relaxed font-light mb-4">{spec.description}</p>
+              {spec.details && (
+                <ul className="space-y-2 mt-6">
+                  {spec.details.map((detail, idx) => (
+                    <li key={idx} className="text-gray-500 text-sm flex items-start space-x-3 font-light">
+                      <span className="text-white mt-1.5">+</span>
+                      <span>{detail}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-br from-white/5 to-transparent border border-gray-800 p-8">
-          <div className="flex items-start space-x-4">
-            <Sparkles className="text-white flex-shrink-0" size={24} />
-            <div>
-              <h3 className="text-white text-lg font-medium mb-2">Workshop Leader</h3>
-              <p className="text-gray-400 text-sm">
-                <span className="text-white font-medium">Ikaro Cavalcante (occulted)</span> leads the session with expertise in AI workflow optimization, prompt engineering, and artistic integration.
-              </p>
-            </div>
-          </div>
+        <div className="mt-16 border-2 border-white p-10">
+          <p className="text-gray-500 text-xs uppercase tracking-wider font-light mb-3">WORKSHOP LEADER</p>
+          <p className="text-white text-lg font-light">
+            <span className="font-medium">Ikaro Cavalcante (occulted)</span> leads the session with expertise in AI workflow optimization, prompt engineering, and artistic integration.
+          </p>
         </div>
       </div>
     </section>
