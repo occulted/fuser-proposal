@@ -13,6 +13,7 @@ const ThreeBackground = () => {
   const rotationRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    // ✅ Salvo no início para usar no cleanup
     const mount = mountRef.current;
     if (!mount) return;
 
@@ -31,7 +32,7 @@ const ThreeBackground = () => {
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
-    // Renderer setup  ✅ AGORA DENTRO DO useEffect
+    // Renderer setup
     const renderer = new THREE.WebGLRenderer({
       alpha: false,
       antialias: true
@@ -42,7 +43,7 @@ const ThreeBackground = () => {
     renderer.toneMappingExposure = 1.2;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    mountRef.current.appendChild(renderer.domElement);
+    mount.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
     // Environment map
@@ -235,7 +236,10 @@ const ThreeBackground = () => {
       const deltaY = event.clientY - previousMousePositionRef.current.y;
       rotationRef.current.y += deltaX * 0.01;
       rotationRef.current.x += deltaY * 0.01;
-      rotationRef.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationRef.current.x));
+      rotationRef.current.x = Math.max(
+        -Math.PI / 2,
+        Math.min(Math.PI / 2, rotationRef.current.x)
+      );
       previousMousePositionRef.current = { x: event.clientX, y: event.clientY };
     };
 
@@ -262,12 +266,19 @@ const ThreeBackground = () => {
     };
 
     const handleTouchMove = (event) => {
-      if (!isDraggingRef.current || !modelRef.current || event.touches.length !== 1) return;
+      if (
+        !isDraggingRef.current ||
+        !modelRef.current ||
+        event.touches.length !== 1
+      ) return;
       const deltaX = event.touches[0].clientX - previousMousePositionRef.current.x;
       const deltaY = event.touches[0].clientY - previousMousePositionRef.current.y;
       rotationRef.current.y += deltaX * 0.01;
       rotationRef.current.x += deltaY * 0.01;
-      rotationRef.current.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotationRef.current.x));
+      rotationRef.current.x = Math.max(
+        -Math.PI / 2,
+        Math.min(Math.PI / 2, rotationRef.current.x)
+      );
       previousMousePositionRef.current = {
         x: event.touches[0].clientX,
         y: event.touches[0].clientY
@@ -304,7 +315,7 @@ const ThreeBackground = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // ✅ Cleanup ÚNICO e no lugar certo
+    // ✅ Cleanup usando 'mount' salvo no início do effect
     return () => {
       canvas.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
@@ -315,15 +326,19 @@ const ThreeBackground = () => {
       canvas.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', handleResize);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      const currentMount = mountRef.current;
-      if (currentMount && rendererRef.current) {
-        currentMount.removeChild(rendererRef.current.domElement);
+      // ✅ Usa 'mount' (variável local) em vez de 'mountRef.current'
+      if (mount && rendererRef.current?.domElement) {
+        try {
+          mount.removeChild(rendererRef.current.domElement);
+        } catch (e) {
+          // Elemento já foi removido
+        }
       }
       envMap.dispose();
       pmremGenerator.dispose();
       rendererRef.current?.dispose();
     };
-  }, []); // ✅ useEffect fecha aqui
+  }, []);
 
   return (
     <div
