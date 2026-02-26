@@ -4,7 +4,7 @@ const Production = () => {
   const specifications = [
     {
       title: 'VISUAL ENVIRONMENT',
-      description: 'Gallery space with controlled lighting, projection setup, and immersive layout suitable for AI-based visual demonstrations.'
+      description: 'Gallery space with controlled lighting, projection setup for an immersive layout suitable for AI-based visual demonstrations.'
     },
     {
       title: 'GUIDED INTERACTION',
