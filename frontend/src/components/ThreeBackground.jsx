@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three-stdlib';
+import { GLTFLoader, RoomEnvironment } from 'three-stdlib';
 
 const ThreeBackground = () => {
   const mountRef = useRef(null);
@@ -40,37 +40,34 @@ const ThreeBackground = () => {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.0;
-    // ✅ Sombras DESATIVADAS
     renderer.shadowMap.enabled = false;
     mount.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Environment map neutro
+    // ✅ RoomEnvironment importado de three-stdlib
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    const envScene = new THREE.RoomEnvironment();
+    const envScene = new RoomEnvironment();
     const envMap = pmremGenerator.fromScene(envScene).texture;
     scene.environment = envMap;
 
-    // ✅ Iluminação ajustada - sem projeção de sombra
+    // Iluminação sem sombras
     const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambientLight);
 
     const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
     directionalLight1.position.set(5, 10, 5);
-    directionalLight1.castShadow = false; // ✅ sem sombra
+    directionalLight1.castShadow = false;
     scene.add(directionalLight1);
 
     const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight2.position.set(-5, 5, -5);
-    directionalLight2.castShadow = false; // ✅ sem sombra
+    directionalLight2.castShadow = false;
     scene.add(directionalLight2);
 
     const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight3.position.set(0, -5, 5);
-    directionalLight3.castShadow = false; // ✅ sem sombra
+    directionalLight3.castShadow = false;
     scene.add(directionalLight3);
-
-    // ✅ Ground plane REMOVIDO (era a causa da sombra estranha)
 
     // Fallback sword
     const createFallbackSword = () => {
@@ -165,7 +162,6 @@ const ThreeBackground = () => {
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
 
-        // ✅ Centraliza o modelo
         model.position.set(-center.x, -center.y, -center.z);
 
         const targetHeight = 14;
@@ -175,7 +171,6 @@ const ThreeBackground = () => {
 
         model.traverse((child) => {
           if (child.isMesh) {
-            // ✅ Material mais escuro e contrastado como na segunda imagem
             child.material = new THREE.MeshStandardMaterial({
               color: 0x888888,
               metalness: 0.5,
@@ -185,7 +180,6 @@ const ThreeBackground = () => {
               transparent: false,
               opacity: 1,
             });
-            // ✅ Sem sombras
             child.castShadow = false;
             child.receiveShadow = false;
           }
@@ -282,7 +276,7 @@ const ThreeBackground = () => {
     canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
     canvas.addEventListener('touchend', handleTouchEnd);
 
-    // Animation loop - ✅ rotação automática suave quando não está sendo arrastado
+    // Animation loop
     let animationFrameId;
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
