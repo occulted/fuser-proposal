@@ -13,7 +13,6 @@ const ThreeBackground = () => {
   const rotationRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    // ✅ Salvo no início para usar no cleanup
     const mount = mountRef.current;
     if (!mount) return;
 
@@ -28,11 +27,11 @@ const ThreeBackground = () => {
       0.1,
       1000
     );
-    camera.position.set(0.5, 2, 8);
+    camera.position.set(0, 0, 10);
     camera.lookAt(0, 0, 0);
     cameraRef.current = camera;
 
-    // Renderer setup
+    // Renderer setup - SEM sombras
     const renderer = new THREE.WebGLRenderer({
       alpha: false,
       antialias: true
@@ -40,53 +39,45 @@ const ThreeBackground = () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMappingExposure = 1.0;
+    // ✅ Sombras DESATIVADAS
+    renderer.shadowMap.enabled = false;
     mount.appendChild(renderer.domElement);
     rendererRef.current = renderer;
 
-    // Environment map
+    // Environment map neutro
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
-    const envScene = new THREE.Scene();
-    envScene.background = new THREE.Color(0xffffff);
+    const envScene = new THREE.RoomEnvironment();
     const envMap = pmremGenerator.fromScene(envScene).texture;
     scene.environment = envMap;
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    // ✅ Iluminação ajustada - sem projeção de sombra
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(ambientLight);
 
-    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.2);
+    const directionalLight1 = new THREE.DirectionalLight(0xffffff, 1.0);
     directionalLight1.position.set(5, 10, 5);
-    directionalLight1.castShadow = true;
-    directionalLight1.shadow.mapSize.width = 2048;
-    directionalLight1.shadow.mapSize.height = 2048;
+    directionalLight1.castShadow = false; // ✅ sem sombra
     scene.add(directionalLight1);
 
-    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.8);
     directionalLight2.position.set(-5, 5, -5);
+    directionalLight2.castShadow = false; // ✅ sem sombra
     scene.add(directionalLight2);
 
-    const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.4);
+    const directionalLight3 = new THREE.DirectionalLight(0xffffff, 0.5);
     directionalLight3.position.set(0, -5, 5);
+    directionalLight3.castShadow = false; // ✅ sem sombra
     scene.add(directionalLight3);
 
-    // Ground plane
-    const groundGeometry = new THREE.PlaneGeometry(100, 100);
-    const groundMaterial = new THREE.ShadowMaterial({ opacity: 0.1 });
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-    ground.rotation.x = -Math.PI / 2;
-    ground.position.y = -3;
-    ground.receiveShadow = true;
-    scene.add(ground);
+    // ✅ Ground plane REMOVIDO (era a causa da sombra estranha)
 
     // Fallback sword
     const createFallbackSword = () => {
       const group = new THREE.Group();
 
       const bladeMaterial = new THREE.MeshStandardMaterial({
-        color: 0xc8c8c8,
+        color: 0x909090,
         metalness: 0.7,
         roughness: 0.15,
         envMapIntensity: 3,
@@ -95,19 +86,16 @@ const ThreeBackground = () => {
       const bladeGeometry = new THREE.BoxGeometry(0.4, 8, 0.15);
       const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
       blade.position.y = 2;
-      blade.castShadow = true;
       group.add(blade);
 
       const topGeometry = new THREE.ConeGeometry(0.8, 2, 4);
       const top = new THREE.Mesh(topGeometry, bladeMaterial);
       top.position.y = 7;
-      top.castShadow = true;
       group.add(top);
 
       const upperGuardGeometry = new THREE.BoxGeometry(3, 0.25, 0.25);
       const upperGuard = new THREE.Mesh(upperGuardGeometry, bladeMaterial);
       upperGuard.position.y = 5.5;
-      upperGuard.castShadow = true;
       group.add(upperGuard);
 
       const ornamentGeometry = new THREE.ConeGeometry(0.4, 1, 3);
@@ -125,7 +113,6 @@ const ThreeBackground = () => {
       const guardGeometry = new THREE.BoxGeometry(4, 0.3, 0.3);
       const guard = new THREE.Mesh(guardGeometry, bladeMaterial);
       guard.position.y = -2;
-      guard.castShadow = true;
       group.add(guard);
 
       const leftOrnament2 = new THREE.Mesh(ornamentGeometry, bladeMaterial);
@@ -141,14 +128,12 @@ const ThreeBackground = () => {
       const handleGeometry = new THREE.CylinderGeometry(0.2, 0.2, 2.5, 8);
       const handle = new THREE.Mesh(handleGeometry, bladeMaterial);
       handle.position.y = -3.5;
-      handle.castShadow = true;
       group.add(handle);
 
       const bottomGeometry = new THREE.ConeGeometry(1, 2.5, 4);
       const bottom = new THREE.Mesh(bottomGeometry, bladeMaterial);
       bottom.position.y = -6;
       bottom.rotation.z = Math.PI;
-      bottom.castShadow = true;
       group.add(bottom);
 
       const wingGeometry = new THREE.ConeGeometry(0.6, 1.5, 3);
@@ -180,26 +165,29 @@ const ThreeBackground = () => {
         const size = box.getSize(new THREE.Vector3());
         const center = box.getCenter(new THREE.Vector3());
 
+        // ✅ Centraliza o modelo
         model.position.set(-center.x, -center.y, -center.z);
 
-        const targetHeight = 13;
+        const targetHeight = 14;
         const scale = targetHeight / size.y;
         model.scale.setScalar(scale);
         model.rotation.set(0, 0, 0);
 
         model.traverse((child) => {
           if (child.isMesh) {
+            // ✅ Material mais escuro e contrastado como na segunda imagem
             child.material = new THREE.MeshStandardMaterial({
-              color: 0xd0d0d0,
-              metalness: 0.6,
-              roughness: 0.2,
-              envMapIntensity: 2.5,
+              color: 0x888888,
+              metalness: 0.5,
+              roughness: 0.3,
+              envMapIntensity: 2.0,
               side: THREE.DoubleSide,
               transparent: false,
               opacity: 1,
             });
-            child.castShadow = true;
-            child.receiveShadow = true;
+            // ✅ Sem sombras
+            child.castShadow = false;
+            child.receiveShadow = false;
           }
         });
 
@@ -294,11 +282,15 @@ const ThreeBackground = () => {
     canvas.addEventListener('touchmove', handleTouchMove, { passive: false });
     canvas.addEventListener('touchend', handleTouchEnd);
 
-    // Animation loop
+    // Animation loop - ✅ rotação automática suave quando não está sendo arrastado
     let animationFrameId;
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
       if (modelRef.current) {
+        // Rotação automática suave quando não está dragando
+        if (!isDraggingRef.current) {
+          rotationRef.current.y += 0.002;
+        }
         modelRef.current.rotation.x = rotationRef.current.x;
         modelRef.current.rotation.y = rotationRef.current.y;
       }
@@ -315,7 +307,7 @@ const ThreeBackground = () => {
     };
     window.addEventListener('resize', handleResize);
 
-    // ✅ Cleanup usando 'mount' salvo no início do effect
+    // Cleanup
     return () => {
       canvas.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mousemove', handleMouseMove);
@@ -326,7 +318,6 @@ const ThreeBackground = () => {
       canvas.removeEventListener('touchend', handleTouchEnd);
       window.removeEventListener('resize', handleResize);
       if (animationFrameId) cancelAnimationFrame(animationFrameId);
-      // ✅ Usa 'mount' (variável local) em vez de 'mountRef.current'
       if (mount && rendererRef.current?.domElement) {
         try {
           mount.removeChild(rendererRef.current.domElement);
