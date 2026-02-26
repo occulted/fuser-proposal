@@ -27,8 +27,8 @@ const ThreeBackground = () => {
       0.1,
       1000
     );
-    camera.position.set(0, 0, 10);
-    camera.lookAt(0, 0, 0);
+    camera.position.set(0, 3, 10);
+    camera.lookAt(0, 3, 0);
     cameraRef.current = camera;
 
     // Renderer setup - SEM sombras
