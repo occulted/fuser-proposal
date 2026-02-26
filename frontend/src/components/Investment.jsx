@@ -5,16 +5,16 @@ const Investment = () => {
   const [showReduced, setShowReduced] = useState(false);
 
   const productionCosts = [
-    { item: 'Venue rental', cost: 'USD 1,500' },
-    { item: 'Photographer', cost: 'USD 500' },
-    { item: 'Projector rental', cost: 'USD 180' },
-    { item: 'Production assistant', cost: 'USD 200' },
-    { item: 'Coffee & snacks', cost: 'USD 100' }
+    { item: 'Venue rental', cost: '' },
+    { item: 'Photographer', cost: '' },
+    { item: 'Projector rental', cost: '' },
+    { item: 'Tables & chairs', cost: '' },
+    { item: 'Coffee & snacks', cost: '' }
   ];
 
   const artistIncentives = [
-    { item: 'Participation fee (6 artists × USD 100)', cost: 'USD 600' },
-    { item: 'Platform credits (6 artists × USD 150)', cost: 'USD 900' },
+    { item: 'Participation fee (6 artists × USD 150)', cost: 'USD 900' },
+    { item: 'Platform credits (6 artists × USD 100)', cost: 'USD 600' },
     { item: 'Stories bonus (6 artists × USD 25)', cost: 'USD 150' },
     { item: 'Feed bonus (6 artists × USD 100)', cost: 'USD 600' }
   ];
@@ -35,7 +35,7 @@ const Investment = () => {
         <div className="space-y-px bg-white mb-16">
           {/* Production Costs */}
           <div className="bg-black border-l-2 border-white p-10">
-            <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">PRODUCTION</h3>
+            <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">PRODUCTION BREAKDROWN</h3>
             <div className="space-y-4">
               {productionCosts.map((item, index) => (
                 <div key={index} className="flex items-center justify-between py-3 border-b border-gray-800">
@@ -55,7 +55,7 @@ const Investment = () => {
             <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">FACILITATOR</h3>
             <div className="flex items-center justify-between">
               <span className="text-gray-400 text-sm font-light">Workshop leadership, preparation, and artist curation</span>
-              <span className="text-white text-2xl font-bold">USD 1,650</span>
+              <span className="text-white text-2xl font-bold">USD 1,750</span>
             </div>
           </div>
 
