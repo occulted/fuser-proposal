@@ -5,11 +5,12 @@ const Investment = () => {
   const [showReduced, setShowReduced] = useState(false);
 
   const productionCosts = [
-    { item: 'Venue rental', cost: '' },
-    { item: 'Photographer', cost: '' },
-    { item: 'Projector rental', cost: '' },
-    { item: 'Tables & chairs', cost: '' },
-    { item: 'Coffee & snacks', cost: '' }
+    { item: 'Gallery Venue rental', cost: '1150' },
+    { item: 'Photographer', cost: '500' },
+    { item: 'Projector rental', cost: '180' },
+    { item: 'Tables & chairs', cost: '250' },
+    { item: 'Coffee & snacks', cost: '100' },
+    { item: 'Production Assistant', cost: '300' }
   ];
 
   const artistIncentives = [
@@ -35,7 +36,7 @@ const Investment = () => {
         <div className="space-y-px bg-white mb-16">
           {/* Production Costs */}
           <div className="bg-black border-l-2 border-white p-10">
-            <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">PRODUCTION BREAKDROWN</h3>
+            <h3 className="text-white text-sm font-medium mb-8 uppercase tracking-wide">PRODUCTION BREAKDOWN</h3>
             <div className="space-y-4">
               {productionCosts.map((item, index) => (
                 <div key={index} className="flex items-center justify-between py-3 border-b border-gray-800">
@@ -81,7 +82,7 @@ const Investment = () => {
         <div className="border-4 border-white p-12 mb-8">
           <div className="flex items-center justify-between mb-6">
             <span className="text-white text-2xl font-bold uppercase tracking-wide">TOTAL FULL INVESTMENT</span>
-            <span className="text-white text-6xl font-bold">USD 6,380</span>
+            <span className="text-white text-6xl font-bold">USD 6,480</span>
           </div>
           <p className="text-gray-400 text-sm font-light">
             Complete package including production, facilitation, and full social amplification bonuses.
