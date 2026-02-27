@@ -27,7 +27,7 @@ const Context = () => {
             <div className="border-l-2 border-black pl-8">
               <h3 className="text-black font-medium mb-4 tracking-wide uppercase text-sm">Strategic Positioning</h3>
               <p className="text-gray-600 text-sm leading-relaxed font-light">
-                The initiative is positioned not only as an educational activation, but as a structured content engine capable of generating high-quality artistic outputs, authentic platform integration, and long-term positioning within the São Paulo creative community.
+                The initiative is positioned not only as an educational activation, but as a structured content engine capable of generating high-quality artistic outputs, authentic platform integration, and long-term positioning within the contemporary São Paulo creative community.
               </p>
             </div>
 
